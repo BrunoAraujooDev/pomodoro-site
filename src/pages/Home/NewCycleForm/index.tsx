@@ -1,27 +1,19 @@
 /* eslint-disable prettier/prettier */
 
-import { useForm } from "react-hook-form";
 import { FormContainer, MinusAmountInput, TaskInput } from "./styles";
-import * as zod from 'zod'
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import { useFormContext} from 'react-hook-form'
+import { CycleContext } from "../../../contexts/CyclesContext";
 
 
-const newCycleFormSchema = zod.object({
-    task: zod.string().min(1, 'Informe a tarefa'),
-    minutesAmount: zod.number().min(1, 'O intervalo precisa ser de no mínimo 5 minutos').max(60, 'O intervalo precisa ser de no máximo 60 minutos')
-  })
 
-type newCycleData = zod.infer<typeof newCycleFormSchema>
 
 export function NewCycleForm() {
 
-    const { register, handleSubmit, watch, reset } = useForm<newCycleData>({
-        resolver: zodResolver(newCycleFormSchema),
-        defaultValues: {
-          task: '',
-          minutesAmount: 0
-        }
-      });
+    const { activedCycle} = useContext(CycleContext)
+    const { register} = useFormContext()
+
+    
 
     return (
         <FormContainer>
@@ -36,7 +28,7 @@ export function NewCycleForm() {
             </datalist>
 
             <label htmlFor="minutesAmount">durante</label>
-            <MinusAmountInput type="number" id="minutesAmount" placeholder='00' step={5} min={1} max={60}
+            <MinusAmountInput type="number" id="minutesAmount" placeholder='00' step={5} min={5} max={60}
                 {...register('minutesAmount', { valueAsNumber: true })}
                 disabled={!!activedCycle}
             />
